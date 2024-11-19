@@ -1,0 +1,86 @@
+/* MainUpload.css */
+
+.main-content {
+  padding: 20px;
+  background-color: #1a1a1a; /* Même couleur de fond que la barre latérale */
+  color: #ffffff;
+  min-height: calc(100vh - 60px); /* Ajustez selon la hauteur de votre en-tête */
+}
+
+
+.file-upload {
+  background-color: #333;
+  padding: 20px;
+  padding-top: 10px;
+  border-radius: 5px;
+}
+
+.file-info-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-info-section p {
+  margin-bottom: 15px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+}
+
+.file-upload-label {
+  background-color: #ffd21b;
+  color: #2c2c2c;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  text-decoration: none;
+  text-align: center;
+  width: 260px;
+}
+
+.file-upload-label:hover {
+  background-color: #d4ac0d;
+}
+
+.file-input {
+  display: none;
+}
+
+.deselect-button,
+.upload-button,
+.upload-another-button {
+  background-color: #ffd21b;
+  color: #2c2c2c;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  width: 300px;
+}
+
+.deselect-button {
+  margin: 5px 0;
+}
+
+.deselect-button:hover,
+.upload-button:hover,
+.upload-another-button:hover {
+  background-color: #d4ac0d;
+}
+
+.upload-message {
+  margin-top: 15px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.main-content p {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+}

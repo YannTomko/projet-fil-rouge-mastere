@@ -1,0 +1,87 @@
+/* LoginRegister.css */
+
+.login-register-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a1a;
+  height: 100%;
+  margin-top: 10px;
+}
+
+.login-register {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  padding-top: 15px;
+  background-color: #2c2c2c;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+.login-register h2 {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  color: #f1c40f;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.form-input:focus {
+  border-color: #ffd21b;
+  outline: none;
+}
+
+.form-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #ffd21b;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.form-button:hover {
+  background-color: #d4ac0d;
+}
+
+.switch-button {
+  width: 100%;
+  padding: 10px;
+  background-color: transparent;
+  color: #ffd21b;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.switch-button:hover {
+  color: #d4ac0d;
+}

@@ -1,0 +1,32 @@
+/* Header.css */
+
+.header {
+  padding: 10px 20px;
+  background-color: #1a1a1a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #333;
+  height: 40px;
+}
+
+.header-title {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  color: #ffd21b;
+  font-size: 24px;
+}
+
+.header-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #ffd21b;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.header-button:hover {
+  background-color: #d4ac0d;
+}
