@@ -12,9 +12,10 @@ const uploadFile = (req, res) => {
     const filePath = req.file.path;
     const fileName = req.file.originalname;
     const owner = req.body.owner;
+    const size = parseInt(req.body.size, 10);
 
-    const query = `INSERT INTO files (name, path, owner) VALUES (?, ?, ?)`;
-    db.run(query, [fileName, filePath, owner], function (err) {
+    const query = `INSERT INTO files (name, path, owner, size) VALUES (?, ?, ?, ?)`;
+    db.run(query, [fileName, filePath, owner, size], function (err) {
         if (err) {
             return res.status(500).json({ error: 'Erreur lors de l\'ajout du fichier' });
         }
@@ -68,7 +69,7 @@ const getAllFiles = (req, res) => {
 const getFile = (req, res) => {
     const { id } = req.params;
 
-    const query = `SELECT name, path FROM files WHERE id = ?`;
+    const query = `SELECT name, path, owner, size, created FROM files WHERE id = ?`;
     db.get(query, [id], (err, row) => {
         if (err) {
             return res.status(500).json({ error: 'Erreur lors de la récupération du fichier' });
@@ -94,9 +95,33 @@ const getFile = (req, res) => {
     });
 };
 
+const getFileInfo = (req, res) => {
+    const { id } = req.params;
+
+    const query = `SELECT name, path, owner, size, created FROM files WHERE id = ?`;
+    db.get(query, [id], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la récupération des informations du fichier' });
+        }
+
+        if (!row) {
+            return res.status(404).json({ error: 'Fichier non trouvé' });
+        }
+
+        // Renvoie uniquement les métadonnées du fichier
+        res.status(200).json({
+            name: row.name,
+            owner: row.owner,
+            size: row.size,
+            created: row.created,
+        });
+    });
+};
+
 module.exports = {
     uploadFile,
     deleteFile,
     getAllFiles,
-    getFile
+    getFile,
+    getFileInfo
 };

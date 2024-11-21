@@ -16,7 +16,9 @@ const db = new sqlite3.Database(':memory:', (err) => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             path TEXT,
-            owner TEXT
+            owner TEXT,
+            size INTEGER,
+            created DATETIME DEFAULT CURRENT_TIMESTAMP
         )`);
     }
 });
