@@ -1,86 +1,64 @@
-/* MainUpload.css */
-
 .main-content {
   padding: 20px;
-  background-color: #1a1a1a; /* Même couleur de fond que la barre latérale */
-  color: #ffffff;
-  min-height: calc(100vh - 60px); /* Ajustez selon la hauteur de votre en-tête */
+  font-family: Arial, sans-serif;
 }
 
-
-.file-upload {
-  background-color: #333;
-  padding: 20px;
-  padding-top: 10px;
-  border-radius: 5px;
-}
-
-.file-info-section {
+.upload-section {
   display: flex;
   flex-direction: column;
+  align-items: left;
+  margin-top: 10px;
 }
 
-.file-info-section p {
-  margin-bottom: 15px;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
+.file-upload {
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
 }
+
 
 .file-upload-label {
-  background-color: #ffd21b;
-  color: #2c2c2c;
-  padding: 10px 20px;
-  border-radius: 5px;
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
   cursor: pointer;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  text-decoration: none;
-  text-align: center;
-  width: 260px;
+  transition: background-color 0.3s;
 }
 
 .file-upload-label:hover {
-  background-color: #d4ac0d;
+  background-color: #0056b3;
 }
 
 .file-input {
-  display: none;
+  display: none; /* Cache l'input pour styliser uniquement le label */
 }
 
-.deselect-button,
 .upload-button,
+.deselect-button,
 .upload-another-button {
-  background-color: #ffd21b;
-  color: #2c2c2c;
-  padding: 10px 20px;
+  margin-right: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  text-align: center;
-  width: 300px;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
-.deselect-button {
-  margin: 5px 0;
-}
-
-.deselect-button:hover,
 .upload-button:hover,
+.deselect-button:hover,
 .upload-another-button:hover {
-  background-color: #d4ac0d;
+  background-color: #0056b3;
 }
 
-.upload-message {
-  margin-top: 15px;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #ffffff;
+.upload-another-button {
+  background-color: #28a745;
 }
 
-.main-content p {
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #ffffff;
+.upload-another-button:hover {
+  background-color: #218838;
 }

@@ -37,6 +37,12 @@ function App() {
     setRefreshSidebar(prev => !prev); // Inverse la valeur pour déclencher useEffect
   };
 
+  const ProtectedMainFile: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const fileId = Number(id);
+    return <MainFile fileId={fileId} refreshSidebar={handleRefreshSidebar} user={user}/>;
+  };
+
   return (
     <Router>
       <Header user={user} onLogout={handleLogout} />
@@ -59,7 +65,7 @@ function App() {
             />
             <Route
               path="/file/:id"
-              element={user ? <ProtectedMainFile /> : <Navigate to="/login" />}
+              element={<ProtectedMainFile />}
             />
           </Routes>
         </div>
@@ -68,10 +74,6 @@ function App() {
   );
 }
 
-const ProtectedMainFile: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const fileId = Number(id);
-  return <MainFile fileId={fileId} />;
-};
+
 
 export default App;

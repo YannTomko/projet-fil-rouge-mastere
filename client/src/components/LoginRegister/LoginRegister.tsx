@@ -9,11 +9,12 @@ interface LoginRegisterProps {
 
 const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isAccountCreated, setIsAccountCreated] = useState(false); // Nouvel état
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,20 +22,22 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
     if (isLoginMode) {
       if (username && password) {
         const response = await handleLogin(username, password);
-        if (response)
+        if (response) {
           onLogin({ username });
-        else
-          setMessage('Nom d\'utilisateur ou mot de passe incorrect')
+        } else {
+          setMessage('Nom d\'utilisateur ou mot de passe incorrect');
+        }
       }
     } else {
       if (username && password && password === confirmPassword) {
         const response = await handleRegister(username, email, password);
-        if (response) 
-          setMessage('Compte créé avec succès, vous pouvez vous connecter')
-        else
-          setMessage('Nom d\'utilisateur ou email déjà utilisé')
+        if (response) {
+          setIsAccountCreated(true); // Passe à l'interface de confirmation
+        } else {
+          setMessage('Nom d\'utilisateur ou email déjà utilisé');
+        }
       } else {
-        setMessage("Les mots de passe ne correspondent pas");
+        setMessage('Les mots de passe ne correspondent pas');
       }
     }
   };
@@ -53,76 +56,88 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
 
   return (
     <div className="login-register-container">
-      <div className="login-register">
-        <h2>{isLoginMode ? 'Connexion' : 'Inscription'}</h2>
-        {message ? (
-          <p style={{ marginBottom: '20px' }}>
-            {message}
-          </p>
-        ) : null}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>
-              Nom d'utilisateur:
-              <input
-                className="form-input"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          {!isLoginMode && (
+      {isAccountCreated ? (
+        <div className="account-created-container">
+          <h2>Compte créé avec succès !</h2>
+          <p>Vous pouvez maintenant vous connecter avec vos identifiants.</p>
+          <button
+            className="form-button"
+            onClick={() => {
+              switchMode()
+              setIsAccountCreated(false);
+            }}
+          >
+            Accéder à la connexion
+          </button>
+        </div>
+      ) : (
+        <div className="login-register">
+          <h2>{isLoginMode ? 'Connexion' : 'Inscription'}</h2>
+          {message && <p className="form-message">{message}</p>}
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>
-                Adresse email:
+                Nom d'utilisateur:
                 <input
                   className="form-input"
                   type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </label>
             </div>
-          )}
-          <div className="form-group">
-            <label>
-              Mot de passe:
-              <input
-                className="form-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          {!isLoginMode && (
+            {!isLoginMode && (
+              <div className="form-group">
+                <label>
+                  Adresse email:
+                  <input
+                    className="form-input"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            )}
             <div className="form-group">
               <label>
-                Confirmer le mot de passe:
+                Mot de passe:
                 <input
                   className="form-input"
                   type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </label>
             </div>
-          )}
-          <button className="form-button" type="submit">
-            {isLoginMode ? 'Se connecter' : "S'inscrire"}
+            {!isLoginMode && (
+              <div className="form-group">
+                <label>
+                  Confirmer le mot de passe:
+                  <input
+                    className="form-input"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            )}
+            <button className="form-button" type="submit">
+              {isLoginMode ? 'Se connecter' : "S'inscrire"}
+            </button>
+          </form>
+          <button className="switch-button" onClick={switchMode}>
+            {isLoginMode
+              ? "Pas de compte ? Inscrivez-vous"
+              : 'Déjà un compte ? Connectez-vous'}
           </button>
-        </form>
-        <button className="switch-button" onClick={switchMode}>
-          {isLoginMode
-            ? "Pas de compte ? Inscrivez-vous"
-            : 'Déjà un compte ? Connectez-vous'}
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

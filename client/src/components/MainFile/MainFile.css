@@ -1,86 +1,61 @@
-/* MainUpload.css */
-
 .main-content {
   padding: 20px;
-  background-color: #1a1a1a; /* Même couleur de fond que la barre latérale */
-  color: #ffffff;
-  min-height: calc(100vh - 60px); /* Ajustez selon la hauteur de votre en-tête */
+  padding-top: 0;
+  font-family: Arial, sans-serif;
 }
 
-
-.file-upload {
-  background-color: #333;
-  padding: 20px;
-  padding-top: 10px;
-  border-radius: 5px;
+.file-details {
+  list-style: none;
+  padding: 0;
 }
 
-.file-info-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.file-info-section p {
-  margin-bottom: 15px;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-}
-
-.file-upload-label {
-  background-color: #ffd21b;
-  color: #2c2c2c;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  text-decoration: none;
-  text-align: center;
-  width: 260px;
-}
-
-.file-upload-label:hover {
-  background-color: #d4ac0d;
-}
-
-.file-input {
-  display: none;
-}
-
-.deselect-button,
-.upload-button,
-.upload-another-button {
-  background-color: #ffd21b;
-  color: #2c2c2c;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  text-align: center;
-  width: 300px;
-}
-
-.deselect-button {
+.file-details li {
   margin: 5px 0;
 }
 
-.deselect-button:hover,
-.upload-button:hover,
-.upload-another-button:hover {
-  background-color: #d4ac0d;
+.file-actions {
+  margin-top: 20px;
 }
 
-.upload-message {
-  margin-top: 15px;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #ffffff;
+.download-button,
+.delete-button,
+.share-button {
+  padding: 10px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
-.main-content p {
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #ffffff;
+.download-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.download-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #b02a37;
+}
+
+.share-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.share-button:hover {
+  background-color: #218838;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
 }

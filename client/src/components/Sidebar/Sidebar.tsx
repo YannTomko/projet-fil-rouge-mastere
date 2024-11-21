@@ -4,6 +4,7 @@ import './Sidebar.css';
 import { getAllFiles } from '../../services/filesServices';
 import { FileData } from '../../models/File';
 import { User } from '../../models/User';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
   user: User;
@@ -14,9 +15,11 @@ const Sidebar: React.FC<SidebarProps> = ({ user, refresh }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const fetchFiles = async (username:string) => {
+    const fetchFiles = async (username: string) => {
       try {
         const response = await getAllFiles();
         console.log(response.files);
@@ -31,30 +34,6 @@ const Sidebar: React.FC<SidebarProps> = ({ user, refresh }) => {
     fetchFiles(user.username);
   }, [refresh]);
 
-  const handleDownload = async (fileId: number, fileName: string) => {
-    try {
-      const response = await axios.get(`http://localhost:3001/api/files/get/${fileId}`, {
-        responseType: 'blob',
-      });
-
-      console.log(response)
-
-      // Créer un lien de téléchargement dynamique
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName); // Nom du fichier à télécharger
-      document.body.appendChild(link);
-      link.click();
-
-      // Nettoyer
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Erreur lors du téléchargement du fichier', error);
-    }
-  };
-
   if (loading) {
     return <aside className="sidebar">Chargement des fichiers...</aside>;
   }
@@ -67,18 +46,29 @@ const Sidebar: React.FC<SidebarProps> = ({ user, refresh }) => {
     <aside className="sidebar">
       <nav>
         <ul className="sidebar-list">
-          {files.map((file) => (
-            <li key={file.id} className="sidebar-item">
-              <button
-                onClick={() => handleDownload(file.id, file.name)}
-                className="file-link"
-              >
-                {file.name}
-              </button>
-            </li>
-          ))}
+          {files.map((file) => {
+            const isActive = location.pathname === `/file/${file.id}`;
+            return (
+              <li key={file.id} className="sidebar-item">
+                <button
+                  onClick={() => navigate(`/file/${file.id}`)}
+                  className={`file-link ${isActive ? 'active' : ''}`}
+                >
+                  {file.name}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </nav>
+      <div className="sidebar-footer">
+        <button
+          onClick={() => navigate(`/upload`)}
+          className={`upload-redirect-button ${location.pathname === '/upload' ? 'active' : ''}`}
+        >
+          Ajouter des fichiers
+        </button>
+      </div>
     </aside>
   );
 };

@@ -52,52 +52,55 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
     return (
         <main className="main-content">
             {user ? (
-                <div className="upload-section">
-                    <div className="file-upload">
-                        {uploaded ? (
-                            <div className="file-info-section">
-                                <p>Le fichier a été téléchargé avec succès.</p>
-                                <button
-                                    onClick={() => {
-                                        setUploaded(false);
-                                        setSelectedFile(null);
-                                    }}
-                                    className="upload-another-button"
-                                >
-                                    Uploader un autre fichier
-                                </button>
-                            </div>
-                        ) : !selectedFile ? (
-                            <div className="file-info-section">
-                                <p>Sélectionnez un fichier à uploader</p>
-                                <label htmlFor="fileInput" className="file-upload-label">
-                                    Sélectionner un fichier
-                                    <input
-                                        id="fileInput"
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        className="file-input"
-                                    />
-                                </label>
-                            </div>
-                        ) : (
-                            <div className="file-info-section">
-                                <p>Fichier sélectionné : {selectedFile.name}</p>
-                                <button onClick={handleFileDeselect} className="deselect-button">
-                                    Désélectionner
-                                </button>
-                                <button onClick={handleFileUpload} className="upload-button">
-                                    Uploader le fichier
-                                </button>
-                            </div>
-                        )}
+                <>
+                    <div className="upload-section">
+                        <div className="file-upload">
+                            {uploaded ? (
+                                <div className="file-info-section">
+                                    <p>Le fichier a été téléchargé avec succès.</p>
+                                    <button
+                                        onClick={() => {
+                                            setUploaded(false);
+                                            setSelectedFile(null);
+                                        }}
+                                        className="upload-another-button"
+                                    >
+                                        Uploader un autre fichier
+                                    </button>
+                                </div>
+                            ) : !selectedFile ? (
+                                <div className="file-info-section">
+                                    <p>Sélectionnez un fichier à uploader</p>
+                                    <label htmlFor="fileInput" className="file-upload-label">
+                                        Sélectionner un fichier
+                                        <input
+                                            id="fileInput"
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            className="file-input"
+                                        />
+                                    </label>
+                                </div>
+                            ) : (
+                                <div className="file-info-section">
+                                    <p>Fichier sélectionné : {selectedFile.name}</p>
+                                    <button onClick={handleFileDeselect} className="deselect-button">
+                                        Désélectionner
+                                    </button>
+                                    <button onClick={handleFileUpload} className="upload-button">
+                                        Uploader le fichier
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                </>
             ) : (
                 <p>Veuillez vous connecter pour commencer à utiliser AirLocker.</p>
             )}
             <br />
         </main>
+
     );
 };
 
