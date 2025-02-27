@@ -68,6 +68,11 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         }
     };
 
+    // Fonction pour afficher les statistiques
+    const handleShowStatistic = async () => {
+        alert('Statistiques');
+    };
+
     if (error) {
         return <p className="error-message">{error}</p>;
     }
@@ -103,6 +108,7 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                             Supprimer
                         </button>
                         <button onClick={handleShare} className="share-button">Partager</button>
+                        <button onClick={handleShowStatistic} className="statistic-button">Statistiques</button>
                     </>
                 )}
             </div>
