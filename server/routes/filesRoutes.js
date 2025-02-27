@@ -12,6 +12,6 @@ router.delete('/delete/:id', deleteFile);
 router.post('/getall', getAllFiles);
 router.get('/get/:id', getFile);
 router.get('/getinfo/:id', getFileInfo);
-router.get('/statistics/:id', getStatistics);
+router.get('/statistics/:file_id', getStatistics);
 
 module.exports = router;

@@ -43,8 +43,10 @@ export const getAllFiles = async () => {
 
 export const getFile = async (fileId: number) => {
   try {
+    const user = localStorage.getItem('user');
     const response = await axios.get(`http://localhost:3001/api/files/get/${fileId}`, {
       responseType: 'blob',
+      headers: { 'user': user }
     });
     return response
   } catch (error: any) {

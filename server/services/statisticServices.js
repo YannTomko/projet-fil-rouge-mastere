@@ -1,12 +1,35 @@
-const db = require('../database');
-const { promisify } = require('util');
-const Statistic = require("../models/statistic");
+const db = require('../database.js');
+const Statistic = require('../models/statistic.js');
 
-// Conversion des méthodes de base de données en Promises
-const dbAll = promisify(db.all).bind(db);
-const dbGet = promisify(db.get).bind(db);
+// Wrappers manuels pour les méthodes de base de données
+const dbAll = (query, params) => {
+    return new Promise((resolve, reject) => {
+        db.all(query, params, (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+};
 
-// Middleware de gestion d'erreurs
+const dbGet = (query, params) => {
+    return new Promise((resolve, reject) => {
+        db.get(query, params, (err, row) => {
+            if (err) reject(err);
+            else resolve(row);
+        });
+    });
+};
+
+const dbRun = (query, params) => {
+    return new Promise((resolve, reject) => {
+        db.run(query, params, function(err) {
+            if (err) reject(err);
+            else resolve(this); // 'this' contient les infos de la dernière opération
+        });
+    });
+};
+
+// Middleware de gestion d'erreurs (inchangé)
 const handleError = (res, error) => {
     console.error('Database Error:', error);
     res.status(500).json({
@@ -15,16 +38,15 @@ const handleError = (res, error) => {
     });
 };
 
-export const getStatistics = async (req, res) => {
+const getStatistics = async (req, res) => {
     try {
         const { file_id } = req.params;
 
-        // Validation de l'input
         if (!file_id || !Number.isInteger(parseInt(file_id))) {
             return res.status(400).json({ error: 'ID de fichier invalide' });
         }
 
-        // Exécution des requêtes en parallèle
+        // Exécution des requêtes avec les nouveaux wrappers
         const [stats, lastAccess, nb24h, nbWeek, nbTotal] = await Promise.all([
             dbAll(`SELECT * FROM statistics WHERE file_id = ?`, [file_id]),
             dbGet(`SELECT MAX(last_access_date_time) as last_access FROM statistics WHERE file_id = ?`, [file_id]),
@@ -33,19 +55,16 @@ export const getStatistics = async (req, res) => {
             dbGet(`SELECT COUNT(*) as count FROM statistics WHERE file_id = ?`, [file_id])
         ]);
 
-        // Vérification des résultats
         if (!stats || stats.length === 0) {
             return res.status(404).json({ error: 'Aucune statistique trouvée pour ce fichier' });
         }
 
-        // Validation des nombres
         const validateNumber = (value, fieldName) => {
             const num = parseInt(value?.count || value);
             if (isNaN(num)) throw new Error(`Valeur numérique invalide pour ${fieldName}`);
             return num;
         };
 
-        // Création de l'objet Statistic avec vérification des types
         const statistics = new Statistic(
             parseInt(file_id),
             validateNumber(nb24h, 'nb_access_last_24h'),
@@ -54,7 +73,6 @@ export const getStatistics = async (req, res) => {
             lastAccess.last_access || null
         );
 
-        // En-têtes de cache
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('ETag', `W/"${Date.now()}"`);
 
@@ -65,23 +83,17 @@ export const getStatistics = async (req, res) => {
     }
 };
 
-// service d'ajout de statistique
-export const addStatistic = async (req, res) => {
+const addStatistic = (file_id) => {
     try {
-        const { file_id } = req.params;
-
-        // Validation de l'input
         if (!file_id || !Number.isInteger(parseInt(file_id))) {
-            return res.status(400).json({ error: 'ID de fichier invalide' });
+           console.error('ID de fichier invalide');
         }
 
-        // Création de la statistique
-        const query = `INSERT INTO statistics (file_id) VALUES (?)`;
-        await db.run(query, [file_id]);
-
-        res.json({ message: 'Statistique ajoutée avec succès' });
-
+        dbRun(`INSERT INTO statistics (file_id, last_access_date_time) VALUES (?, datetime('now'))`, [file_id]);
+        console.log('Statistique ajoutée avec succès');
     } catch (error) {
-        handleError(res, error);
+        console.error('Erreur lors de l\'ajout de la statistique', error);
     }
 };
+
+module.exports = { getStatistics, addStatistic };
