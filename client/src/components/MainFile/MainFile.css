@@ -19,7 +19,8 @@
 
 .download-button,
 .delete-button,
-.share-button {
+.share-button,
+.statistic-button {
   padding: 10px 15px;
   margin-right: 10px;
   border: none;
@@ -53,6 +54,15 @@
 
 .share-button:hover {
   background-color: #218838;
+}
+
+.statistic-button{
+    background-color: #ff7b14;
+    color: white;
+}
+
+.statistic-button:hover {
+    background-color: #e65c00;
 }
 
 .error-message {
