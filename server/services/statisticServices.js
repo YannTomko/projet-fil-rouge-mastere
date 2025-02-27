@@ -15,7 +15,7 @@ const handleError = (res, error) => {
     });
 };
 
-export const getAllStatistics = async (req, res) => {
+export const getStatistics = async (req, res) => {
     try {
         const { file_id } = req.params;
 
