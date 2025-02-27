@@ -64,3 +64,13 @@ export const getFileInfo = async (fileId: number) => {
     return null
   }
 }
+
+export const getFileStatistics = async (fileId: number) => {
+    try {
+        const response = await axios.get(`http://localhost:3001/api/files/statistics/${fileId}`);
+        return response
+    } catch (error: any) {
+        console.error('Erreur lors de la récupération des statistiques du fichier:', error.response?.data?.error || error.message);
+        return null
+    }
+}
