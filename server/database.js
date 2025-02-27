@@ -20,6 +20,11 @@ const db = new sqlite3.Database(':memory:', (err) => {
             size INTEGER,
             created DATETIME DEFAULT CURRENT_TIMESTAMP
         )`);
+        db.run(`CREATE TABLE statistics (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_id INTEGER,
+            last_access_date_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+        )`);
     }
 });
 

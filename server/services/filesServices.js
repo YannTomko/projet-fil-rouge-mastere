@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const db = require('../database');
+const {addStatistic} = require("./statisticServices");
 
 // Pour ajouter un fichier
 const uploadFile = (req, res) => {
@@ -97,6 +98,7 @@ const getFile = (req, res) => {
 
 const getFileInfo = (req, res) => {
     const { id } = req.params;
+    const { user_id } = req.body;
 
     const query = `SELECT name, path, owner, size, created FROM files WHERE id = ?`;
     db.get(query, [id], (err, row) => {
@@ -106,6 +108,11 @@ const getFileInfo = (req, res) => {
 
         if (!row) {
             return res.status(404).json({ error: 'Fichier non trouvé' });
+        }
+
+        if (row.owner !== user_id) {
+            // Add statistic
+            addStatistic(id);
         }
 
         // Renvoie uniquement les métadonnées du fichier
