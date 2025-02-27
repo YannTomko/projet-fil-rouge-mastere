@@ -81,9 +81,14 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
     // Fonction pour afficher les statistiques
     const handleShowStatistic = async () => {
         // get statistics again in case it has been updated
-        const stats = await getFileStatistics(fileId);
-        alert('Statistique affichée dans la console');
-        if(stats) console.log(stats.data);
+        const statistic = await getFileStatistics(fileId);
+        if(statistic && statistic.data.statistics) {
+            alert("Statistiques du fichier : \n" +
+                "Nombre d'accès dans les dernières 24h : " + statistic.data.statistics.nb_access_last_24h + "\n" +
+                "Nombre d'accès dans la dernière semaine : " + statistic.data.statistics.nb_access_last_week + "\n" +
+                "Nombre total d'accès : " + statistic.data.statistics.nb_access_total + "\n" +
+                "Dernier accès : " + statistic.data.statistics.last_access_date_time);
+        }
     };
 
     if (error) {

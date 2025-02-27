@@ -13,7 +13,6 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
   const location = useLocation();
 
   const showLoginButton = location.pathname !== '/login';
-  console.log(user)
 
   return (
     <header className="header">
