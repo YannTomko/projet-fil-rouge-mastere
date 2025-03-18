@@ -43,8 +43,10 @@ export const getAllFiles = async () => {
 
 export const getFile = async (fileId: number) => {
   try {
+    const user = localStorage.getItem('user');
     const response = await axios.get(`http://localhost:3001/api/files/get/${fileId}`, {
       responseType: 'blob',
+      headers: { 'user': user }
     });
     return response
   } catch (error: any) {
@@ -61,4 +63,14 @@ export const getFileInfo = async (fileId: number) => {
     console.error('Erreur lors de la récupération des infos du fichier:', error.response?.data?.error || error.message);
     return null
   }
+}
+
+export const getFileStatistics = async (fileId: number) => {
+    try {
+        const response = await axios.get(`http://localhost:3001/api/files/statistics/${fileId}`);
+        return response
+    } catch (error: any) {
+        console.error('Erreur lors de la récupération des statistiques du fichier:', error.response?.data?.error || error.message);
+        return null
+    }
 }

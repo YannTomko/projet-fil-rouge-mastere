@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './MainFile.css';
 import axios from 'axios';
-import { deleteFile, getFile, getFileInfo } from '../../services/filesServices';
+import {deleteFile, getFile, getFileInfo, getFileStatistics} from '../../services/filesServices';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../models/User';
 
@@ -21,6 +21,7 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
     const [error, setError] = useState<string | null>(null);
     const [shareLink, setShareLink] = useState<string | null>(null); // État pour le lien de partage
     const navigate = useNavigate();
+    const [stats, setStats] = useState<any>(null);
 
     // Charger les infos du fichier
     useEffect(() => {
@@ -32,8 +33,17 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                 setError('Erreur lors de la récupération des informations du fichier');
             }
         };
+        const fetchStats = async () => {
+            try {
+                const response = await getFileStatistics(fileId);
+                if (response) setStats(response.data);
+            } catch (error: any) {
+                console.error('Erreur lors de la récupération des statistiques du fichier:', error.response?.data?.error || error.message);
+            }
+        }
 
         fetchFileInfo();
+        fetchStats();
         setShareLink(null)
     }, [fileId]);
 
@@ -70,7 +80,15 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
 
     // Fonction pour afficher les statistiques
     const handleShowStatistic = async () => {
-        alert('Statistiques');
+        // get statistics again in case it has been updated
+        const statistic = await getFileStatistics(fileId);
+        if(statistic && statistic.data.statistics) {
+            alert("Statistiques du fichier : \n" +
+                "Nombre d'accès dans les dernières 24h : " + statistic.data.statistics.nb_access_last_24h + "\n" +
+                "Nombre d'accès dans la dernière semaine : " + statistic.data.statistics.nb_access_last_week + "\n" +
+                "Nombre total d'accès : " + statistic.data.statistics.nb_access_total + "\n" +
+                "Dernier accès : " + statistic.data.statistics.last_access_date_time);
+        }
     };
 
     if (error) {
@@ -108,7 +126,7 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                             Supprimer
                         </button>
                         <button onClick={handleShare} className="share-button">Partager</button>
-                        <button onClick={handleShowStatistic} className="statistic-button">Statistiques</button>
+                        {stats && (<button onClick={handleShowStatistic} className="statistic-button">Statistiques</button>)}
                     </>
                 )}
             </div>

@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const db = require('../database');
+const {addStatistic} = require("./statisticServices");
 
 // Pour ajouter un fichier
 const uploadFile = (req, res) => {
@@ -68,6 +69,9 @@ const getAllFiles = (req, res) => {
 
 const getFile = (req, res) => {
     const { id } = req.params;
+    // get user in header
+    const user = req.headers.user;
+    const user_id = user ? JSON.parse(user).id : null;
 
     const query = `SELECT name, path, owner, size, created FROM files WHERE id = ?`;
     db.get(query, [id], (err, row) => {
@@ -89,6 +93,10 @@ const getFile = (req, res) => {
             res.download(filePath, row.name, (err) => {
                 if (err) {
                     return res.status(500).json({ error: 'Erreur lors du téléchargement du fichier' });
+                }
+                if (!user_id && row.owner !== user_id) {
+                    // Add statistic
+                    addStatistic(id);
                 }
             });
         });
