@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './MainFile.css';
-import axios from 'axios';
 import {deleteFile, getFile, getFileInfo, getFileStatistics} from '../../services/filesServices';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../models/User';
@@ -36,7 +35,10 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         const fetchStats = async () => {
             try {
                 const response = await getFileStatistics(fileId);
-                if (response) setStats(response.data);
+                if (response) 
+                    setStats(response.data);
+                else
+                    setStats(null);
             } catch (error: any) {
                 console.error('Erreur lors de la récupération des statistiques du fichier:', error.response?.data?.error || error.message);
             }
@@ -51,7 +53,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
     const handleDownload = async () => {
         try {
             const response = await getFile(fileId);
-
             if (response) {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');

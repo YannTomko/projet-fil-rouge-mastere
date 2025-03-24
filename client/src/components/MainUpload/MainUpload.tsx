@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { User } from '../../models/User';
 import './MainUpload.css';
-import { deleteAllUsers, getAllUsers } from '../../services/authServices';
-import { getAllFiles, uploadFile } from '../../services/filesServices';
+import { uploadFile } from '../../services/filesServices';
 
 interface MainUploadProps {
     user: User | null;
@@ -35,18 +34,6 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
 
     const handleFileDeselect = () => {
         setSelectedFile(null);
-    };
-
-    const handleGetAllUsers = async () => {
-        await getAllUsers();
-    };
-
-    const handleDeleteAllUsers = async () => {
-        await deleteAllUsers();
-    };
-
-    const handleGetAllFiles = async () => {
-        await getAllFiles();
     };
 
     return (
