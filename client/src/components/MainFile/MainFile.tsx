@@ -35,7 +35,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         const fetchStats = async () => {
             try {
                 const response = await getFileStatistics(fileId);
-                console.log(response)
                 if (response) 
                     setStats(response.data);
                 else
@@ -54,8 +53,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
     const handleDownload = async () => {
         try {
             const response = await getFile(fileId);
-            console.log("caca")
-            console.log(response)
             if (response) {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');

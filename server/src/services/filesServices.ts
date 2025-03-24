@@ -38,14 +38,16 @@ export const deleteFile = async (req: Request, res: Response): Promise<void> => 
 
     try {
         const file = await prisma.files.findUnique({ where: { id: parseInt(id, 10) } });
-
+       
         if (!file) {
             res.status(404).json({ error: "Fichier non trouvé" });
             return;
         }
 
+        await prisma.statistics.deleteMany({ where: { file_id: file.id } });
+
         fs.unlink(file.path, async (unlinkErr) => {
-            if (unlinkErr) {
+            if (unlinkErr && unlinkErr.code !== "ENOENT") {
                 console.error("Erreur unlink (deleteFile) :", unlinkErr);
                 res.status(500).json({ error: "Erreur lors de la suppression du fichier" });
                 return;
@@ -53,7 +55,7 @@ export const deleteFile = async (req: Request, res: Response): Promise<void> => 
 
             try {
                 await prisma.files.delete({ where: { id: file.id } });
-                res.json({ message: "Fichier supprimé avec succès" });
+                res.json({ message: "Fichier supprimé (métadonnées supprimées aussi)" });
             } catch (deleteErr) {
                 console.error("Erreur Prisma (deleteFile) :", deleteErr);
                 res.status(500).json({ error: "Erreur lors de la suppression des métadonnées" });
@@ -64,6 +66,7 @@ export const deleteFile = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ error: "Erreur lors de la suppression" });
     }
 };
+
 
 // Récupérer tous les fichiers
 export const getAllFiles = async (_req: Request, res: Response): Promise<void> => {
