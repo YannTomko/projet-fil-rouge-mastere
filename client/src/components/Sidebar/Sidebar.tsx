@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './Sidebar.css';
 import { getAllFiles } from '../../services/filesServices';
 import { FileData } from '../../models/File';
@@ -32,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user, refresh }) => {
     };
 
     fetchFiles(user.username);
-  }, [refresh]);
+  }, [refresh, user]);
 
   if (loading) {
     return <aside className="sidebar">Chargement des fichiers...</aside>;
