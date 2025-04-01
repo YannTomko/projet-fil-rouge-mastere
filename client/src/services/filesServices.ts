@@ -1,19 +1,20 @@
-import axios from "axios";
+import api from "../utils/api";
 
+// Upload d'un fichier
 export const uploadFile = async (file: File, owner: string) => {
   if (!file) {
-    throw new Error('Aucun fichier sélectionné.');
+    throw new Error("Aucun fichier sélectionné.");
   }
+
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('owner', owner)
-  formData.append('size', file.size.toString());
-  console.log(formData)
+  formData.append("file", file);
+  formData.append("owner", owner);
+  formData.append("size", file.size.toString());
 
   try {
-    const response = await axios.post('http://localhost:3001/api/files/upload', formData, {
+    const response = await api.post("/files/upload", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
@@ -22,43 +23,60 @@ export const uploadFile = async (file: File, owner: string) => {
   }
 };
 
-export const deleteFile = async (fileId:number) => {
+// Suppression d’un fichier
+export const deleteFile = async (fileId: number) => {
   try {
-    await axios.delete(`http://localhost:3001/api/files/delete/${fileId}`);
+    await api.delete(`/files/delete/${fileId}`);
   } catch (error) {
-    console.error('Erreur lors de la suppression du fichier', error);
+    console.error("Erreur lors de la suppression du fichier", error);
   }
 };
 
+// Récupération de tous les fichiers
 export const getAllFiles = async () => {
   try {
-    const response = await axios.post('http://localhost:3001/api/files/getall');
-    console.log('Liste des fichiers:', response.data);
-    return response.data
+    const response = await api.get("/files/all");
+    console.log("Liste des fichiers:", response.data);
+    return response.data;
   } catch (error: any) {
-    console.error('Erreur lors de la récupération des fichiers:', error.response?.data?.error || error.message);
-    return null
+    console.error("Erreur lors de la récupération des fichiers:", error.response?.data?.error || error.message);
+    return null;
   }
 };
 
+// Téléchargement d’un fichier (blob)
 export const getFile = async (fileId: number) => {
   try {
-    const response = await axios.get(`http://localhost:3001/api/files/get/${fileId}`, {
-      responseType: 'blob',
+    const user = localStorage.getItem("user");
+    const response = await api.get(`/files/${fileId}`, {
+      responseType: "blob",
+      headers: { user },
     });
-    return response
+    return response;
   } catch (error: any) {
-    console.error('Erreur lors de la récupération du fichier:', error.response?.data?.error || error.message);
-    return null
+    console.error("Erreur lors de la récupération du fichier:", error.response?.data?.error || error.message);
+    return null;
   }
-}
+};
 
+// Infos d’un fichier
 export const getFileInfo = async (fileId: number) => {
   try {
-    const response = await axios.get(`http://localhost:3001/api/files/getinfo/${fileId}`);
-    return response
+    const response = await api.get(`/files/info/${fileId}`);
+    return response;
   } catch (error: any) {
-    console.error('Erreur lors de la récupération des infos du fichier:', error.response?.data?.error || error.message);
-    return null
+    console.error("Erreur lors de la récupération des infos du fichier:", error.response?.data?.error || error.message);
+    return null;
   }
-}
+};
+
+// Statistiques d’un fichier
+export const getFileStatistics = async (fileId: number) => {
+  try {
+    const response = await api.get(`/files/statistics/${fileId}`);
+    return response;
+  } catch (error: any) {
+    console.error("Erreur lors de la récupération des statistiques du fichier:", error.response?.data?.error || error.message);
+    return null;
+  }
+};
