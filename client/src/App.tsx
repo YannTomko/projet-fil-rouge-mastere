@@ -44,7 +44,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router basename={process.env.REACT_APP_BASENAME || '/'}>
       <Header user={user} onLogout={handleLogout} />
 
       <div style={{ display: 'flex' }}>
