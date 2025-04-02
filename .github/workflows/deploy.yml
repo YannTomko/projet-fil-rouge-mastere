@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no your_user@your_server_ip << 'EOF'
+          ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << 'EOF'
             cd /var/www/projet-fil-rouge-mastere
             git pull origin main
 
