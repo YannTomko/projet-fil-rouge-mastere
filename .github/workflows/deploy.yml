@@ -1,4 +1,38 @@
-- name: Setup SSH
-  uses: webfactory/ssh-agent@v0.5.3
-  with:
-    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+name: Deploy on merge to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no your_user@your_server_ip << 'EOF'
+            cd /var/www/projet-fil-rouge-mastere
+            git pull origin main
+
+            # Backend
+            cd server
+            npm install
+            npx prisma migrate deploy
+            npx tsc
+            pm2 restart airlocker-api || pm2 start dist/server.js --name airlocker-api
+
+            # Frontend
+            cd ../client
+            npm install
+            npm run build
+          EOF
