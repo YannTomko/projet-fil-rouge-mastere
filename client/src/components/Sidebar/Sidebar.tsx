@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
-import { getAllFiles } from '../../services/filesServices';
+import { getUserFiles } from '../../services/filesServices';
 import { FileData } from '../../models/File';
 import { User } from '../../models/User';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -20,10 +20,10 @@ const Sidebar: React.FC<SidebarProps> = ({ user, refresh }) => {
   useEffect(() => {
     const fetchFiles = async (username: string) => {
       try {
-        const response = await getAllFiles();
+        /*const response = await getUserFiles();
         console.log(response.files);
         setFiles(response.files);
-        setLoading(false);
+        setLoading(false);*/
       } catch (err: any) {
         setError('Erreur lors de la récupération des fichiers');
         setLoading(false);

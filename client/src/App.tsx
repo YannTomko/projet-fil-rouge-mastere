@@ -21,16 +21,19 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (user: User) => {
-    setUser(user);
-    // Stocker l'utilisateur dans le localStorage
-    localStorage.setItem('user', JSON.stringify(user));
+  const handleLogin = (response:any) => {
+    console.log(response)
+    setUser(response.user);
+    localStorage.setItem('user', JSON.stringify(response.user));
+    localStorage.setItem("accessToken", JSON.stringify(response.accessToken));
+    localStorage.setItem("refreshToken", JSON.stringify(response.refreshToken));
   };
 
   const handleLogout = () => {
     setUser(null);
-    // Supprimer l'utilisateur du localStorage
     localStorage.removeItem('user');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
   };
 
   const handleRefreshSidebar = () => {
