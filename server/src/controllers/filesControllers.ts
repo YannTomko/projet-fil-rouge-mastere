@@ -9,8 +9,9 @@ export const uploadFileController = async (req: Request, res: Response): Promise
     res.status(400).json({ error: "Aucun fichier téléchargé" });
     return;
   }
+  const owner = Number(req.body.owner);
+  const size = req.body.size;
 
-  const { owner, size } = req.body;
   try {
     const file = await uploadFileService(req.file, owner, size);
     res.status(201).json({ message: "Fichier ajouté avec succès", fileId: file.id });
@@ -37,13 +38,16 @@ export const deleteFileController = async (req: Request, res: Response): Promise
   }
 };
 
-export const getUserFilesController = async (_req: Request, res: Response): Promise<void> => {
-  console.log("tralala4");
-  res.status(200).send("OK");
-  return;
+export const getUserFilesController = async (req: Request, res: Response): Promise<void> => {
+  const userId = Number(req.params.userid)
+  if (!userId) {
+    res.status(400).json({ error: "ID utilisateur manquant" });
+    return;
+  }
+
   try {
-    const files = await getUserFilesService();
-    res.json({ files });
+    const files = await getUserFilesService(userId);
+    res.status(200).json({ files });
   } catch (err) {
     console.error("Erreur serveur (getUserFilesController) :", err);
     res.status(500).json({ error: "Erreur lors de la récupération des fichiers" });
@@ -54,7 +58,7 @@ export const getFileController = async (req: Request, res: Response): Promise<vo
   const id = parseInt(req.params.id, 10);
   const rawUser = req.headers.user;
   const user = typeof rawUser === "string" ? JSON.parse(rawUser) : null;
-  const username = user?.username;
+  const userId = user?.userId;
 
   try {
     const file = await getFileByIdService(id);
@@ -72,7 +76,7 @@ export const getFileController = async (req: Request, res: Response): Promise<vo
         res.status(500).json({ error: "Erreur lors du téléchargement du fichier" });
         return;
       }
-      if (!username || file.owner !== username) {
+      if (!userId || file.owner_id !== userId) {
         addStatisticController(id);
       }
     });

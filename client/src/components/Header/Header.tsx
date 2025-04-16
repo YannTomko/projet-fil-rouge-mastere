@@ -22,7 +22,6 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
         <div className="header-user-info">
           <span style={{marginRight:'10px'}}>Connecté en tant que {user.username}</span>
           <button className="header-button" onClick={onLogout}>Déconnexion</button>
-          <button className="header-button" onClick={getUserFiles}>testco</button>
         </div>
       ) : (
         showLoginButton && (

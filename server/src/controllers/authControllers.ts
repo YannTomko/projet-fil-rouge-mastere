@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsersService, loginUserService, registerUserService } from "../services/authServices";
+import { loginUserService, registerUserService } from "../services/authServices";
 import { generateAccessToken, generateRefreshToken, verifyToken } from "../utils/jwt";
 
 
@@ -51,12 +51,14 @@ export const loginUserController = async (req: Request, res: Response): Promise<
 
 // Generate new access token
 export const refreshTokenController = async (req: Request, res: Response): Promise<void> => {
-  const { refreshToken } = req.body;
+  const rawRefreshToken = req.body.refreshToken;
   
-  if (!refreshToken) {
+  if (!rawRefreshToken) {
     res.status(400).json({ error: "Refresh token manquant" });
     return;
   }
+
+  const refreshToken = rawRefreshToken.replace(/^"(.*)"$/, '$1');
   
   try {
     const decoded = verifyToken(refreshToken) as { id: number };
@@ -66,16 +68,5 @@ export const refreshTokenController = async (req: Request, res: Response): Promi
   } catch (error: any) {
     console.error("Erreur lors du rafraîchissement du token :", error);
     res.status(401).json({ error: "Refresh token invalide" });
-  }
-};
-
-// Get all users
-export const getAllUsersController = async (_req: Request, res: Response): Promise<void> => {
-  try {
-    const users = await getAllUsersService();
-    res.json({ users });
-  } catch (err) {
-    console.error("Erreur serveur (getAllUsersController):", err);
-    res.status(500).json({ error: "Erreur serveur lors de la récupération des utilisateurs" });
   }
 };

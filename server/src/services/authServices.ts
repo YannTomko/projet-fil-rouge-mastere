@@ -1,7 +1,7 @@
 import { prisma } from "../prisma";
 
 export const registerUserService = async (username: string, email: string, password: string) => {
-  const existingUser = await prisma.users.findFirst({
+  const existingUser = await prisma.user.findFirst({
     where: {
       OR: [{ username }, { email }],
     },
@@ -11,7 +11,7 @@ export const registerUserService = async (username: string, email: string, passw
     throw new Error("USERNAME_OR_EMAIL_TAKEN");
   }
 
-  const newUser = await prisma.users.create({
+  const newUser = await prisma.user.create({
     data: { username, email, password },
   });
 
@@ -19,7 +19,7 @@ export const registerUserService = async (username: string, email: string, passw
 };
 
 export const loginUserService = async (username: string, password: string) => {
-  const user = await prisma.users.findFirst({
+  const user = await prisma.user.findFirst({
     where: { username, password },
     select: { id: true, username: true },
   });
@@ -29,10 +29,4 @@ export const loginUserService = async (username: string, password: string) => {
   }
 
   return user;
-};
-
-export const getAllUsersService = async () => {
-  return await prisma.users.findMany({
-    select: { id: true, username: true, email: true },
-  });
 };

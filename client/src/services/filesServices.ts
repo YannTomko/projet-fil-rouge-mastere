@@ -1,14 +1,14 @@
 import api from "../utils/api";
 
 // Upload d'un fichier
-export const uploadFile = async (file: File, owner: string) => {
+export const uploadFile = async (file: File, owner: number) => {
   if (!file) {
     throw new Error("Aucun fichier sélectionné.");
   }
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("owner", owner);
+  formData.append("owner", owner.toString());
   formData.append("size", file.size.toString());
 
   try {
@@ -42,7 +42,6 @@ export const getUserFiles = async () => {
     }
     const user = JSON.parse(storedUser);
     const response = await api.get(`/files/user/${user.id}`);
-    console.log("Liste des fichiers pour l'utilisateur", user.id, ":", response.data);
     return response.data;
   } catch (error: any) {
     console.error(

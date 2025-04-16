@@ -38,7 +38,6 @@ export const addStatisticController = async (file_id: number): Promise<void> => 
 
   try {
     await addStatisticService(file_id);
-    console.log("Statistique ajoutée avec succès");
   } catch (error) {
     console.error("Erreur lors de l'ajout de la statistique :", error);
   }

@@ -10,10 +10,8 @@ api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("accessToken");
         if (token && config.headers) {
-            console.log("[API] Ajout de l'access token aux headers");
             config.headers.Authorization = `Bearer ${token}`;
         } else {
-            console.log("[API] Pas d'access token trouvé dans localStorage.");
         }
         return config;
     },
@@ -25,7 +23,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
     (response) => {
-        console.log("[API] Réponse reçue :", response);
         return response;
     },
     async (error) => {
@@ -40,17 +37,14 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             const refreshToken = localStorage.getItem("refreshToken");
             if (!refreshToken) {
-                console.warn("[API] Aucun refresh token trouvé. Déconnexion de l'utilisateur.");
                 localStorage.removeItem("user");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
-                //window.location.href = "/";
+                window.location.href = "/";
                 return Promise.reject(error);
             }
             try {
-                console.log("[API] Refresh token trouvé, demande d'un nouveau token via /auth/refresh");
                 const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
-                console.log("[API] Nouveau access token reçu :", data.accessToken);
                 localStorage.setItem("accessToken", data.accessToken);
                 originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
                 return api(originalRequest);
@@ -59,7 +53,7 @@ api.interceptors.response.use(
                 localStorage.removeItem("user");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
-                //window.location.href = "/";
+                window.location.href = "/";
                 return Promise.reject(refreshError);
             }
         }

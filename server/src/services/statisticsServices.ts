@@ -3,16 +3,16 @@ import { Statistic } from "../models/statistic";
 
 export const getStatisticsService = async (fileId: number): Promise<Statistic | null> => {
   const [stats, lastAccessRow, nb24hCount, nbWeekCount, nbTotalCount] = await Promise.all([
-    prisma.statistics.findMany({
+    prisma.statistic.findMany({
       where: { file_id: fileId },
     }),
-    prisma.statistics.aggregate({
+    prisma.statistic.aggregate({
       _max: {
         last_access_date_time: true,
       },
       where: { file_id: fileId },
     }),
-    prisma.statistics.count({
+    prisma.statistic.count({
       where: {
         file_id: fileId,
         last_access_date_time: {
@@ -20,7 +20,7 @@ export const getStatisticsService = async (fileId: number): Promise<Statistic | 
         },
       },
     }),
-    prisma.statistics.count({
+    prisma.statistic.count({
       where: {
         file_id: fileId,
         last_access_date_time: {
@@ -28,7 +28,7 @@ export const getStatisticsService = async (fileId: number): Promise<Statistic | 
         },
       },
     }),
-    prisma.statistics.count({
+    prisma.statistic.count({
       where: { file_id: fileId },
     }),
   ]);
@@ -47,7 +47,7 @@ export const getStatisticsService = async (fileId: number): Promise<Statistic | 
 };
 
 export const addStatisticService = async (fileId: number): Promise<void> => {
-  await prisma.statistics.create({
+  await prisma.statistic.create({
     data: {
       file_id: fileId,
       last_access_date_time: new Date(),

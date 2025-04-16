@@ -22,7 +22,6 @@ function App() {
   }, []);
 
   const handleLogin = (response:any) => {
-    console.log(response)
     setUser(response.user);
     localStorage.setItem('user', JSON.stringify(response.user));
     localStorage.setItem("accessToken", JSON.stringify(response.accessToken));
@@ -34,6 +33,7 @@ function App() {
     localStorage.removeItem('user');
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    window.location.href = "/";
   };
 
   const handleRefreshSidebar = () => {
