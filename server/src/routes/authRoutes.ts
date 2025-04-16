@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { deleteAllUsers, getAllUsers, loginUser, registerUser } from "../services/authServices";
+import { loginUserController, refreshTokenController, registerUserController } from "../controllers/authControllers";
 
 const router = Router();
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.get("/all", getAllUsers);     
-router.delete("/all", deleteAllUsers); 
+router.post("/register", registerUserController);
+router.post("/login", loginUserController);
+router.post("/refresh", refreshTokenController);
 
 export default router;

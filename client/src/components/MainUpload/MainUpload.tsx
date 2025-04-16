@@ -25,7 +25,7 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
 
         if (!user) return;
         try {
-            await uploadFile(selectedFile, user.username);
+            await uploadFile(selectedFile, user.id);
             setUploaded(true)
             refreshSidebar()
         } catch (error) {

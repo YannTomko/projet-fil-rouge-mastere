@@ -104,7 +104,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         <main className="main-content">
             <h1>{fileInfo.name}</h1>
             <ul className="file-details">
-                <li><strong>Propriétaire :</strong> {fileInfo.owner}</li>
                 <li><strong>Taille :</strong> {fileInfo.size} octets</li>
                 <li><strong>Date de création :</strong> {new Date(fileInfo.created).toLocaleString()}</li>
             </ul>
