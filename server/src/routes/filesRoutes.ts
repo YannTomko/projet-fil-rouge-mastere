@@ -9,11 +9,11 @@ const upload = multer({ dest: 'uploads/' });
 
 const router = Router();
 
-router.post('/upload', upload.single('file'), uploadFileController);
-router.delete('/delete/:id', deleteFileController);
-router.get('/:id', getFileController);
+router.post('/upload', authMiddleware, upload.single('file'), uploadFileController);
+router.delete('/delete/:id', authMiddleware, deleteFileController);
+router.get('/:id', authMiddleware, getFileController);
 router.get('/user/:userid', authMiddleware, getUserFilesController);
-router.get('/info/:id', getFileInfoController);
-router.get('/statistics/:file_id', getStatisticsController);
+router.get('/info/:id', authMiddleware, getFileInfoController);
+router.get('/statistics/:file_id', authMiddleware, getStatisticsController);
 
 export default router;

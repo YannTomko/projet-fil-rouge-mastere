@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { Statistic } from "../models/statistic";
 import { addStatisticService, getStatisticsService } from "../services/statisticsServices";
+import { getFileInfoService } from "../services/filesServices";
 
 export const getStatisticsController = async (req: Request, res: Response): Promise<void> => {
   const { file_id } = req.params;
@@ -9,6 +10,18 @@ export const getStatisticsController = async (req: Request, res: Response): Prom
 
   if (!parsedFileId || isNaN(parsedFileId)) {
     res.status(400).json({ error: "ID de fichier invalide" });
+    return;
+  }
+
+  const fileInfo = await getFileInfoService(parsedFileId);
+  
+  if (!fileInfo) {
+    res.status(404).json({ error: "Fichier non trouvé" });
+    return;
+  }
+
+  if (fileInfo?.owner_id != req.user.id) {
+    res.status(401).json({ error: "Accès au fichier non autorisé" });
     return;
   }
 

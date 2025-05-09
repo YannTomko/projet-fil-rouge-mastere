@@ -9,7 +9,7 @@ export const uploadFileController = async (req: Request, res: Response): Promise
     res.status(400).json({ error: "Aucun fichier téléchargé" });
     return;
   }
-  const owner = Number(req.body.owner);
+  const owner = req.user.id;
   const size = req.body.size;
 
   try {
@@ -22,7 +22,7 @@ export const uploadFileController = async (req: Request, res: Response): Promise
 };
 
 export const deleteFileController = async (req: Request, res: Response): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const id = req.user.id
 
   try {
     const result = await deleteFileService(id);
@@ -39,7 +39,8 @@ export const deleteFileController = async (req: Request, res: Response): Promise
 };
 
 export const getUserFilesController = async (req: Request, res: Response): Promise<void> => {
-  const userId = Number(req.params.userid)
+  const userId = req.user.id
+
   if (!userId) {
     res.status(400).json({ error: "ID utilisateur manquant" });
     return;
@@ -56,9 +57,7 @@ export const getUserFilesController = async (req: Request, res: Response): Promi
 
 export const getFileController = async (req: Request, res: Response): Promise<void> => {
   const id = parseInt(req.params.id, 10);
-  const rawUser = req.headers.user;
-  const user = typeof rawUser === "string" ? JSON.parse(rawUser) : null;
-  const userId = user?.userId;
+  const userId = req.user.id
 
   try {
     const file = await getFileByIdService(id);
@@ -91,8 +90,14 @@ export const getFileInfoController = async (req: Request, res: Response): Promis
 
   try {
     const fileInfo = await getFileInfoService(id);
+
     if (!fileInfo) {
       res.status(404).json({ error: "Fichier non trouvé" });
+      return;
+    }
+
+    if (fileInfo?.owner_id != req.user.id) {
+      res.status(401).json({ error: "Accès au fichier non autorisé" });
       return;
     }
 
