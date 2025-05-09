@@ -1,14 +1,14 @@
 import api from "../utils/api";
 
 // Upload d'un fichier
-export const uploadFile = async (file: File, owner: string) => {
+export const uploadFile = async (file: File, owner: number) => {
   if (!file) {
     throw new Error("Aucun fichier sélectionné.");
   }
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("owner", owner);
+  formData.append("owner", owner.toString());
   formData.append("size", file.size.toString());
 
   try {
@@ -33,13 +33,21 @@ export const deleteFile = async (fileId: number) => {
 };
 
 // Récupération de tous les fichiers
-export const getAllFiles = async () => {
+export const getUserFiles = async () => {
   try {
-    const response = await api.get("/files/all");
-    console.log("Liste des fichiers:", response.data);
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      console.error("Aucun utilisateur trouvé dans le localStorage");
+      return null;
+    }
+    const user = JSON.parse(storedUser);
+    const response = await api.get(`/files/user/${user.id}`);
     return response.data;
   } catch (error: any) {
-    console.error("Erreur lors de la récupération des fichiers:", error.response?.data?.error || error.message);
+    console.error(
+      "Erreur lors de la récupération des fichiers:",
+      error.response?.data?.error || error.message
+    );
     return null;
   }
 };

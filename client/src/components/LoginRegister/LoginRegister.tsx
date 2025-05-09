@@ -23,7 +23,7 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
       if (username && password) {
         const response = await handleLogin(username, password);
         if (response) {
-          onLogin({ username });
+          onLogin(response);
         } else {
           setMessage('Nom d\'utilisateur ou mot de passe incorrect');
         }
@@ -32,7 +32,7 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
       if (username && password && password === confirmPassword) {
         const response = await handleRegister(username, email, password);
         if (response) {
-          setIsAccountCreated(true); // Passe à l'interface de confirmation
+          setIsAccountCreated(true);
         } else {
           setMessage('Nom d\'utilisateur ou email déjà utilisé');
         }

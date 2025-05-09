@@ -2,6 +2,7 @@ import React from 'react';
 import { User } from '../../models/User';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Header.css';
+import { getUserFiles } from '../../services/filesServices';
 
 interface HeaderProps {
   user: User | null;
@@ -16,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
 
   return (
     <header className="header">
-      <h1 className="header-title">AirLocker shana</h1>
+      <h1 className="header-title">AirLocker</h1>
       {user ? (
         <div className="header-user-info">
           <span style={{marginRight:'10px'}}>Connecté en tant que {user.username}</span>

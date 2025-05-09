@@ -7,26 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model files {
+model file {
   id         Int          @id @default(autoincrement())
   name       String
   path       String
-  owner      String
+  owner_id   Int
+  owner      user        @relation(fields: [owner_id], references: [id])
   size       Int
   created    DateTime    @default(now()) @db.Timestamp(6)
-  statistics statistics[]
+  statistics statistic[]
 }
 
-model statistics {
+model statistic {
   id                    Int       @id @default(autoincrement())
   file_id               Int
   last_access_date_time DateTime @default(now()) @db.Timestamp(6)
-  files                 files     @relation(fields: [file_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  file                 file     @relation(fields: [file_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model users {
+model user {
   id       Int     @id @default(autoincrement())
   username String @unique
   email    String @unique
   password String
+  files     file[]
 }
