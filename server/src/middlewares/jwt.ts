@@ -6,8 +6,7 @@ export const authMiddleware = (
     res: Response,
     next: NextFunction
 ): void => {
-    const reqWithUser = req as Request & { user?: { id: number } };
-    const authHeader = reqWithUser.headers.authorization;
+    const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         res.status(401).json({ error: "Access token manquant" });
         return;
@@ -18,12 +17,12 @@ export const authMiddleware = (
 
     try {
         const decoded = verifyToken(accessToken) as { id: number };
-        reqWithUser.user = decoded;
+        req.user = decoded;
         next();
         return;
     } catch (error: any) {
         if (error.name === "TokenExpiredError") {
-            const rawRefreshToken = reqWithUser.headers["x-refresh-token"];
+            const rawRefreshToken = req.headers["x-refresh-token"];
             if (!rawRefreshToken || typeof rawRefreshToken !== "string") {
                 res.status(401).json({ error: "Refresh token manquant" });
                 return;
@@ -33,7 +32,7 @@ export const authMiddleware = (
                 const decodedRefresh = verifyToken(refreshToken) as { id: number };
                 const newAccessToken = generateAccessToken({ id: decodedRefresh.id });
                 res.setHeader("x-access-token", newAccessToken);
-                reqWithUser.user = verifyToken(newAccessToken) as { id: number };
+                req.user = verifyToken(newAccessToken) as { id: number };
                 next();
                 return;
             } catch (refreshError) {
