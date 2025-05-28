@@ -6,8 +6,8 @@
   background-color: #2c2c2c;
   color: #ffffff;
   border-right: 1px solid #333;
-  height: calc(100vh - 60px); /* Ajustez selon la hauteur de votre en-tête */
-  overflow-y: auto; /* Ajoute une barre de défilement si le contenu dépasse */
+  height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 
 .sidebar-list {
@@ -47,7 +47,6 @@
   font-weight: bold;
 }
 
-/* Personnalisation de la barre de défilement */
 .sidebar::-webkit-scrollbar {
   width: 8px;
 }

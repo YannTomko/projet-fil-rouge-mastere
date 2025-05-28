@@ -17,8 +17,6 @@ export const deleteFileService = async (id: number) => {
   const file = await prisma.file.findUnique({ where: { id } });
   if (!file) return null;
 
-  await prisma.statistic.deleteMany({ where: { file_id: id } });
-
   return new Promise((resolve, reject) => {
     fs.unlink(file.path, async (err) => {
       if (err && err.code !== "ENOENT") return reject(err);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './MainFile.css';
-import {deleteFile, getFile, getFileInfo, getFileStatistics} from '../../services/filesServices';
+import {deleteFile, getFile, getFileInfo} from '../../services/filesServices';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../models/User';
 
@@ -18,9 +18,8 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         created: string;
     } | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [shareLink, setShareLink] = useState<string | null>(null); // État pour le lien de partage
+    const [shareLink, setShareLink] = useState<string | null>(null);
     const navigate = useNavigate();
-    const [stats, setStats] = useState<any>(null);
 
     // Charger les infos du fichier
     useEffect(() => {
@@ -32,20 +31,8 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                 setError('Erreur lors de la récupération des informations du fichier');
             }
         };
-        const fetchStats = async () => {
-            try {
-                const response = await getFileStatistics(fileId);
-                if (response) 
-                    setStats(response.data);
-                else
-                    setStats(null);
-            } catch (error: any) {
-                console.error('Erreur lors de la récupération des statistiques du fichier:', error.response?.data?.error || error.message);
-            }
-        }
 
         fetchFileInfo();
-        fetchStats();
         setShareLink(null)
     }, [fileId]);
 
@@ -57,7 +44,7 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', fileInfo?.name || 'fichier'); // Nom du fichier
+                link.setAttribute('download', fileInfo?.name || 'fichier');
                 document.body.appendChild(link);
                 link.click();
                 link.parentNode?.removeChild(link);
@@ -65,30 +52,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
             }
         } catch (error) {
             console.error('Erreur lors du téléchargement du fichier', error);
-        }
-    };
-
-    // Fonction pour générer le lien de partage
-    const handleShare = async () => {
-        try {
-            const link = `${window.location.origin}/file/${fileId}`;
-            setShareLink(link);
-            await navigator.clipboard.writeText(link); // Copie dans le presse-papier
-        } catch (error) {
-            console.error('Erreur lors de la génération du lien de partage', error);
-        }
-    };
-
-    // Fonction pour afficher les statistiques
-    const handleShowStatistic = async () => {
-        // get statistics again in case it has been updated
-        const statistic = await getFileStatistics(fileId);
-        if(statistic && statistic.data.statistics) {
-            alert("Statistiques du fichier : \n" +
-                "Nombre d'accès dans les dernières 24h : " + statistic.data.statistics.nb_access_last_24h + "\n" +
-                "Nombre d'accès dans la dernière semaine : " + statistic.data.statistics.nb_access_last_week + "\n" +
-                "Nombre total d'accès : " + statistic.data.statistics.nb_access_total + "\n" +
-                "Dernier accès : " + statistic.data.statistics.last_access_date_time);
         }
     };
 
@@ -109,7 +72,7 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
             </ul>
             <div className="file-actions">
                 <button onClick={handleDownload} className="download-button">Télécharger</button>
-                {user && ( // Vérifie si user n'est pas null
+                {user && ( 
                     <>
                         <button
                             onClick={async () => {
@@ -125,8 +88,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                         >
                             Supprimer
                         </button>
-                        <button onClick={handleShare} className="share-button">Partager</button>
-                        {stats && (<button onClick={handleShowStatistic} className="statistic-button">Statistiques</button>)}
                     </>
                 )}
             </div>
