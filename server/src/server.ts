@@ -1,4 +1,3 @@
-import { prisma } from "./prisma";
 import app from "./app";
 
 const port = 3001;

@@ -9,7 +9,7 @@ interface LoginRegisterProps {
 
 const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isAccountCreated, setIsAccountCreated] = useState(false); // Nouvel état
+  const [isAccountCreated, setIsAccountCreated] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

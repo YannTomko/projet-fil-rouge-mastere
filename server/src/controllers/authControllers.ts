@@ -19,7 +19,6 @@ export const registerUserController = async (req: Request, res: Response): Promi
     if (err.message === "USERNAME_OR_EMAIL_TAKEN") {
       res.status(400).json({ error: "Nom d'utilisateur ou email déjà utilisé" });
     } else {
-      console.error("Erreur serveur (registerUserController):", err);
       res.status(500).json({ error: "Erreur serveur lors de l'inscription" });
     }
   }
@@ -43,13 +42,12 @@ export const loginUserController = async (req: Request, res: Response): Promise<
     if (err.message === "INVALID_CREDENTIALS") {
       res.status(400).json({ error: "Identifiants invalides" });
     } else {
-      console.error("Erreur serveur (loginUserController):", err);
       res.status(500).json({ error: "Erreur serveur lors de la connexion" });
     }
   }
 };
 
-// Generate new access token
+// Génère un nouveau access token
 export const refreshTokenController = async (req: Request, res: Response): Promise<void> => {
   const rawRefreshToken = req.body.refreshToken;
   
@@ -66,7 +64,6 @@ export const refreshTokenController = async (req: Request, res: Response): Promi
     
     res.json({ accessToken: newAccessToken });
   } catch (error: any) {
-    console.error("Erreur lors du rafraîchissement du token :", error);
     res.status(401).json({ error: "Refresh token invalide" });
   }
 };

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node dist/server.js",
-    "dev": "nodemon --watch ./src --ext ts --exec ts-node src/server.ts"
+    "dev": "nodemon --watch ./src --ext ts --exec ts-node src/server.ts",
+    "test": "set NODE_OPTIONS=--loader ts-node/esm && jest --config jest.config.ts --coverage"
   },
   "keywords": [],
   "author": "",

@@ -6,17 +6,17 @@ if (!process.env.JWT_SECRET) {
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Générer l'access token (valable par ex. 15 minutes)
+// Générer l'access token
 export const generateAccessToken = (user: { id: number }) => {
   return jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "5m" });
 };
 
-// Générer le refresh token (valable par ex. 7 jours)
+// Générer le refresh token
 export const generateRefreshToken = (user: { id: number }) => {
   return jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
 };
 
-// Vérifier un token et renvoyer le payload décodé
+// Vérifier un token
 export const verifyToken = (token: string) => {
   return jwt.verify(token, JWT_SECRET);
 };

@@ -1,4 +1,4 @@
-name: Deploy on merge to main
+name: CI & Deploy
 
 on:
   push:
@@ -6,9 +6,26 @@ on:
       - main
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install backend deps & run tests
+        run: |
+          cd server
+          npm install
+          npm test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,10 +39,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << 'EOF'
             cd /var/www/projet-fil-rouge-mastere
-            git pull origin main
 
             # Backend
             cd server
+            git pull origin main
             npm install
             npx prisma migrate deploy
             npx tsc
@@ -33,6 +50,7 @@ jobs:
 
             # Frontend
             cd ../client
+            git pull origin main
             npm install
             npm run build
           EOF

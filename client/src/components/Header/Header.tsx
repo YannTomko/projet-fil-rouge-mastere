@@ -2,7 +2,6 @@ import React from 'react';
 import { User } from '../../models/User';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Header.css';
-import { getUserFiles } from '../../services/filesServices';
 
 interface HeaderProps {
   user: User | null;
