@@ -2,52 +2,55 @@ name: CI & Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install & Run Tests
+      - name: Install backend deps & run tests
         run: |
           cd server
-          npm ci
+          npm install
           npm test
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    env:
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - uses: webfactory/ssh-agent@v0.5.3
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << 'EOF'
-            cd /var/www/projet-fil-rouge-mastere/server
+            cd /var/www/projet-fil-rouge-mastere
+
+            # Backend
+            cd server
             git pull origin main
-            npm ci
+            npm install
             npx prisma migrate deploy
             npx tsc
             pm2 restart airlocker-api || pm2 start dist/server.js --name airlocker-api
+
+            # Frontend
             cd ../client
             git pull origin main
-            npm ci
+            npm install
             npm run build
           EOF
