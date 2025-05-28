@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+dotenv.config();
 
 if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is missing from environment variables.");
