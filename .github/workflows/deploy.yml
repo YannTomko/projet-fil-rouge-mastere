@@ -29,6 +29,9 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,8 +43,12 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << 'EOF'
+          ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << EOF
             cd /var/www/projet-fil-rouge-mastere
+
+            # Injecter les variables d’environnement
+            export JWT_SECRET=$JWT_SECRET
+            export DATABASE_URL=$DATABASE_URL
 
             # Backend
             cd server
@@ -49,10 +56,12 @@ jobs:
             npm install
             npx prisma migrate deploy
             npx tsc
-            pm2 restart airlocker-api || pm2 start dist/server.js --name airlocker-api
+            pm2 restart airlocker-api --update-env \
+              || pm2 start dist/server.js --name airlocker-api --env production
 
             # Frontend
             cd ../client
+            git pull origin main
             npm install
             npm run build
           EOF
