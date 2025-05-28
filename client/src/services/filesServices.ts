@@ -52,7 +52,7 @@ export const getUserFiles = async () => {
   }
 };
 
-// Téléchargement d’un fichier (blob)
+// Téléchargement d’un fichier
 export const getFile = async (fileId: number) => {
   try {
     const user = localStorage.getItem("user");
@@ -74,17 +74,6 @@ export const getFileInfo = async (fileId: number) => {
     return response;
   } catch (error: any) {
     console.error("Erreur lors de la récupération des infos du fichier:", error.response?.data?.error || error.message);
-    return null;
-  }
-};
-
-// Statistiques d’un fichier
-export const getFileStatistics = async (fileId: number) => {
-  try {
-    const response = await api.get(`/files/statistics/${fileId}`);
-    return response;
-  } catch (error: any) {
-    console.error("Erreur lors de la récupération des statistiques du fichier:", error.response?.data?.error || error.message);
     return null;
   }
 };

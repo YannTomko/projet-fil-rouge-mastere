@@ -13,7 +13,6 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [refreshSidebar, setRefreshSidebar] = useState<boolean>(false);
 
-  // Utilisez useEffect pour récupérer l'utilisateur depuis le localStorage lors du montage
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -37,7 +36,7 @@ function App() {
   };
 
   const handleRefreshSidebar = () => {
-    setRefreshSidebar(prev => !prev); // Inverse la valeur pour déclencher useEffect
+    setRefreshSidebar(prev => !prev);
   };
 
   const ProtectedMainFile: React.FC = () => {

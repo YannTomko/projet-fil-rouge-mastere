@@ -2,30 +2,46 @@ import { Request, Response } from "express";
 
 import path from "path";
 import { accessFileService, deleteFileService, getFileByIdService, getFileInfoService, getUserFilesService, uploadFileService } from "../services/filesServices";
-import { addStatisticController } from "./statisticsControlleurs";
 
 export const uploadFileController = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
     res.status(400).json({ error: "Aucun fichier téléchargé" });
     return;
   }
-  const owner = req.user.id;
+  const userId = req.user.id;
   const size = req.body.size;
 
+  if (!userId) {
+    res.status(400).json({ error: "ID utilisateur manquant" });
+    return;
+  }
+
   try {
-    const file = await uploadFileService(req.file, owner, size);
+    const file = await uploadFileService(req.file, userId, size);
     res.status(201).json({ message: "Fichier ajouté avec succès", fileId: file.id });
   } catch (err) {
-    console.error("Erreur serveur (uploadFileController) :", err);
     res.status(500).json({ error: "Erreur lors de l'ajout du fichier" });
   }
 };
 
 export const deleteFileController = async (req: Request, res: Response): Promise<void> => {
-  const id = req.user.id
-
+  const userId = req.user.id
+  const fileId = parseInt(req.params.id, 10);
+  
   try {
-    const result = await deleteFileService(id);
+    const fileInfo = await getFileInfoService(fileId);
+
+    if (!fileInfo) {
+      res.status(404).json({ error: "Fichier non trouvé" });
+      return;
+    }
+
+    if (fileInfo?.owner_id != userId) {
+      res.status(403).json({ error: "Accès au fichier non autorisé" });
+      return;
+    }
+
+    const result = await deleteFileService(fileId);
     if (!result) {
       res.status(404).json({ error: "Fichier non trouvé" });
       return;
@@ -33,13 +49,12 @@ export const deleteFileController = async (req: Request, res: Response): Promise
 
     res.json({ message: "Fichier supprimé (métadonnées supprimées aussi)" });
   } catch (err) {
-    console.error("Erreur serveur (deleteFileController) :", err);
     res.status(500).json({ error: "Erreur lors de la suppression" });
   }
 };
 
 export const getUserFilesController = async (req: Request, res: Response): Promise<void> => {
-  const userId = req.user.id
+  const userId = (req.user as any)?.id;
 
   if (!userId) {
     res.status(400).json({ error: "ID utilisateur manquant" });
@@ -50,19 +65,24 @@ export const getUserFilesController = async (req: Request, res: Response): Promi
     const files = await getUserFilesService(userId);
     res.status(200).json({ files });
   } catch (err) {
-    console.error("Erreur serveur (getUserFilesController) :", err);
     res.status(500).json({ error: "Erreur lors de la récupération des fichiers" });
   }
 };
 
 export const getFileController = async (req: Request, res: Response): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const fileId = parseInt(req.params.id, 10);
   const userId = req.user.id
 
   try {
-    const file = await getFileByIdService(id);
+    const file = await getFileByIdService(fileId);
+
     if (!file) {
       res.status(404).json({ error: "Fichier non trouvé" });
+      return;
+    }
+
+    if (file.owner_id != userId) {
+      res.status(403).json({ error: "Accès au fichier non autorisé" });
       return;
     }
 
@@ -71,22 +91,17 @@ export const getFileController = async (req: Request, res: Response): Promise<vo
 
     res.download(filePath, file.name, (downloadErr) => {
       if (downloadErr) {
-        console.error("Erreur téléchargement (getFileController) :", downloadErr);
         res.status(500).json({ error: "Erreur lors du téléchargement du fichier" });
-        return;
-      }
-      if (!userId || file.owner_id !== userId) {
-        addStatisticController(id);
       }
     });
   } catch (err) {
-    console.error("Erreur serveur (getFileController) :", err);
     res.status(500).json({ error: "Erreur lors de la récupération du fichier" });
   }
 };
 
 export const getFileInfoController = async (req: Request, res: Response): Promise<void> => {
   const id = parseInt(req.params.id, 10);
+  const userId = req.user.id
 
   try {
     const fileInfo = await getFileInfoService(id);
@@ -96,14 +111,13 @@ export const getFileInfoController = async (req: Request, res: Response): Promis
       return;
     }
 
-    if (fileInfo?.owner_id != req.user.id) {
-      res.status(401).json({ error: "Accès au fichier non autorisé" });
+    if (fileInfo?.owner_id != userId) {
+      res.status(403).json({ error: "Accès au fichier non autorisé" });
       return;
     }
 
     res.status(200).json(fileInfo);
   } catch (err) {
-    console.error("Erreur serveur (getFileInfoController) :", err);
     res.status(500).json({ error: "Erreur lors de la récupération des informations du fichier" });
   }
 };

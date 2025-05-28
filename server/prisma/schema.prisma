@@ -15,14 +15,6 @@ model file {
   owner      user        @relation(fields: [owner_id], references: [id])
   size       Int
   created    DateTime    @default(now()) @db.Timestamp(6)
-  statistics statistic[]
-}
-
-model statistic {
-  id                    Int       @id @default(autoincrement())
-  file_id               Int
-  last_access_date_time DateTime @default(now()) @db.Timestamp(6)
-  file                 file     @relation(fields: [file_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user {
