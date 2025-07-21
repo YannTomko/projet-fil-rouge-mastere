@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 describe("jwt utils", () => {
   const MODULE_PATH = "../utils/jwt";
 

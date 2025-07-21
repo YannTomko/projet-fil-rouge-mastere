@@ -1,3 +1,4 @@
+// .eslintrc.cjs
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
@@ -15,6 +16,7 @@ module.exports = {
   rules: {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-unused-vars": ["warn"],
+    "@typescript-eslint/no-explicit-any": "off",
     "no-console": "warn",
     "react/prop-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off"

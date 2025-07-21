@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import { prisma } from "../prisma";
 
 export const uploadFileService = async (file: Express.Multer.File, owner: number, size: string) => {

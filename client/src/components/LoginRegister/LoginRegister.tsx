@@ -77,7 +77,7 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>
-                Nom d'utilisateur:
+                {"Nom d'utilisateur :"}
                 <input
                   className="form-input"
                   type="text"
