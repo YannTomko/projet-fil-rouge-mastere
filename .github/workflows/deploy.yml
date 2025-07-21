@@ -20,11 +20,18 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install backend deps & run tests
+      - name: Install & Lint backend
         run: |
           cd server
           npm install
+          npm run lint
           npm test
+
+      - name: Install & Lint frontend
+        run: |
+          cd client
+          npm install
+          npm run lint
 
   deploy:
     needs: test
@@ -46,7 +53,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << EOF
             cd /var/www/projet-fil-rouge-mastere
 
-            # Injecter les variables d’environnement
             export JWT_SECRET=$JWT_SECRET
             export DATABASE_URL=$DATABASE_URL
 
@@ -54,6 +60,7 @@ jobs:
             cd server
             git pull origin main
             npm install
+            npm run lint
             npx prisma migrate deploy
             npx tsc
             pm2 restart airlocker-api --update-env \
@@ -63,5 +70,6 @@ jobs:
             cd ../client
             git pull origin main
             npm install
+            npm run lint
             npm run build
           EOF
