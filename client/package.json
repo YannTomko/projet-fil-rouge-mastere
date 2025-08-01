@@ -24,7 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "nodemon server/index.js",
+    "dev": "nodemon server/index.tsx",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx"
   },
   "browserslist": {

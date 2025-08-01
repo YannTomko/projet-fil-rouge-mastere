@@ -1,6 +1,7 @@
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
 import app from '../app';
+import fs from 'fs';
 import {
   uploadFileService,
   deleteFileService,
@@ -36,7 +37,6 @@ describe('Files API', () => {
     });
 
     it('devrait renvoyer 400 si userId manquant', async () => {
-      // Simule un req.user sans id
       (authMiddleware as jest.Mock).mockImplementationOnce((req, res, next) => {
         (req as any).user = {};
         next();
@@ -48,6 +48,60 @@ describe('Files API', () => {
         .field('size', '123');
       expect(res.status).toBe(400);
       expect(res.body).toEqual({ error: 'ID utilisateur manquant' });
+    });
+
+    it("ne doit pas planter si cleanup échoue quand userId manquant et doit logger", async () => {
+      (authMiddleware as jest.Mock).mockImplementationOnce((req, res, next) => {
+        (req as any).user = {};
+        next();
+      });
+
+      // spy sur console.warn
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      // mock fs.unlink pour contrer le nettoyage et provoquer une erreur
+      const unlinkMock = jest.spyOn(fs, 'unlink').mockImplementation((path, cb: any) => {
+        cb(new Error('permission denied'));
+      });
+
+      const res = await request(app)
+        .post('/api/files/upload')
+        .set('Authorization', 'Bearer token')
+        .attach('file', Buffer.from('dummy'), { filename: 'test.txt' })
+        .field('size', '123');
+
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ error: 'ID utilisateur manquant' });
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Échec du nettoyage'),
+        expect.any(Error)
+      );
+
+      unlinkMock.mockRestore();
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('devrait renvoyer 400 si fichier trop gros', async () => {
+      const bigBuffer = Buffer.alloc(50 * 1024 * 1024 + 1);
+      const res = await request(app)
+        .post('/api/files/upload')
+        .set('Authorization', 'Bearer token')
+        .field('size', '123')
+        .attach('file', bigBuffer, { filename: 'big.txt' });
+      expect(uploadFileService).not.toHaveBeenCalled();
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ error: 'Le fichier dépasse la taille maximale de 50 Mo.' });
+    });
+
+    it('devrait renvoyer 400 si extension suspicieuse', async () => {
+      const res = await request(app)
+        .post('/api/files/upload')
+        .set('Authorization', 'Bearer token')
+        .field('size', '123')
+        .attach('file', Buffer.from('echo malicious'), { filename: 'script.sh' });
+      expect(uploadFileService).not.toHaveBeenCalled();
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ error: 'Extension de fichier non autorisée.' });
     });
 
     it('devrait créer un fichier et renvoyer 201', async () => {
@@ -160,13 +214,15 @@ describe('Files API', () => {
 
   describe('GET /api/files/user/:userid', () => {
     it('devrait renvoyer la liste des fichiers', async () => {
-      const files = [{
-        id: 1,
-        name: 'a.txt',
-        owner_id: 1,
-        size: 10,
-        created: createdDate
-      }];
+      const files = [
+        {
+          id: 1,
+          name: 'a.txt',
+          owner_id: 1,
+          size: 10,
+          created: createdDate,
+        },
+      ];
       (getUserFilesService as jest.Mock).mockResolvedValue(files);
       const res = await request(app)
         .get('/api/files/user/1')
@@ -213,7 +269,7 @@ describe('Files API', () => {
         id: 1,
         owner_id: 2,
         path: __filename,
-        name: 'n'
+        name: 'n',
       });
       const res = await request(app)
         .get('/api/files/1')
@@ -227,7 +283,7 @@ describe('Files API', () => {
         id: 1,
         owner_id: 1,
         path: __filename,
-        name: 'filesController.test.ts'
+        name: 'filesController.test.ts',
       };
       (getFileByIdService as jest.Mock).mockResolvedValue(fakeFile);
       (accessFileService as jest.Mock).mockResolvedValue(undefined);
@@ -252,7 +308,7 @@ describe('Files API', () => {
         id: 1,
         owner_id: 1,
         path: __filename,
-        name: 'filesController.test.ts'
+        name: 'filesController.test.ts',
       };
       (getFileByIdService as jest.Mock).mockResolvedValue(fakeFile);
       (accessFileService as jest.Mock).mockResolvedValue(undefined);
@@ -296,7 +352,7 @@ describe('Files API', () => {
         name: 'a.txt',
         owner_id: 1,
         size: 10,
-        created: createdDate
+        created: createdDate,
       };
       (getFileInfoService as jest.Mock).mockResolvedValue(info);
       const res = await request(app)

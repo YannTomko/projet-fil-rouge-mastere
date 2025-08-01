@@ -8,13 +8,36 @@ interface MainUploadProps {
     refreshSidebar: () => void;
 }
 
+const MAX_SIZE_BYTES = 50 * 1024 * 1024; // 50 Mo
+const SUSPICIOUS_EXTENSIONS = ['.sh', '.exe', '.bat', '.cmd', '.ps1'];
+
 const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
     const [uploaded, setUploaded] = useState<boolean>(false)
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+
+    const hasSuspiciousExtension = (name: string) => {
+        const lower = name.toLowerCase();
+        return SUSPICIOUS_EXTENSIONS.some(ext => lower.endsWith(ext));
+    };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            setSelectedFile(event.target.files[0]);
+            const file = event.target.files[0];
+
+            if (file.size > MAX_SIZE_BYTES) {
+                setSelectedFile(null);
+                setErrorMessage("Le fichier dépasse la taille maximale de 50 Mo.");
+                return;
+            }
+
+            if (hasSuspiciousExtension(file.name)) {
+                setSelectedFile(null);
+                setErrorMessage("Extension de fichier non autorisée.");
+                return;
+            }
+
+            setSelectedFile(file);
         }
     };
 
@@ -30,11 +53,13 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
             refreshSidebar()
         } catch (error) {
             console.error('Erreur lors de l\'upload du fichier', error);
+            setErrorMessage("Erreur lors de l'upload. Réessayez.");
         }
     };
 
     const handleFileDeselect = () => {
         setSelectedFile(null);
+        setErrorMessage('');
     };
 
     return (
@@ -50,6 +75,7 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
                                         onClick={() => {
                                             setUploaded(false);
                                             setSelectedFile(null);
+                                            setErrorMessage('');
                                         }}
                                         className="upload-another-button"
                                     >
@@ -68,6 +94,9 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
                                             className="file-input"
                                         />
                                     </label>
+                                    {errorMessage && (
+                                        <p className="error-message">{errorMessage}</p>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="file-info-section">
@@ -78,6 +107,9 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
                                     <button onClick={handleFileUpload} className="upload-button">
                                         Uploader le fichier
                                     </button>
+                                    {errorMessage && (
+                                        <p className="error-message">{errorMessage}</p>
+                                    )}
                                 </div>
                             )}
                         </div>

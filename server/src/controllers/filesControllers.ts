@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-
 import path from "path";
 import { accessFileService, deleteFileService, getFileByIdService, getFileInfoService, getUserFilesService, uploadFileService } from "../services/filesServices";
+import { cleanupTemp, hasSuspiciousExtension, MAX_SIZE_BYTES } from "../utils/files";
 
 export const uploadFileController = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
@@ -12,7 +12,20 @@ export const uploadFileController = async (req: Request, res: Response): Promise
   const size = req.body.size;
 
   if (!userId) {
+    cleanupTemp((req.file as any).path);
     res.status(400).json({ error: "ID utilisateur manquant" });
+    return;
+  }
+
+  if (req.file.size > MAX_SIZE_BYTES) {
+    cleanupTemp((req.file as any).path);
+    res.status(400).json({ error: "Le fichier dépasse la taille maximale de 50 Mo." });
+    return;
+  }
+
+  if (hasSuspiciousExtension(req.file.originalname)) {
+    cleanupTemp((req.file as any).path);
+    res.status(400).json({ error: "Extension de fichier non autorisée." });
     return;
   }
 
