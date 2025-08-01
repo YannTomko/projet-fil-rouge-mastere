@@ -2,7 +2,6 @@ import { prisma } from "../prisma";
 import { hashPassword, verifyPassword } from "../utils/auth";
 
 export const registerUserService = async (username: string, email: string, password: string) => {
-  console.log("registerUserService called", { username, email }); 
   
   const existingUser = await prisma.user.findFirst({
     where: {
@@ -15,7 +14,6 @@ export const registerUserService = async (username: string, email: string, passw
   }
 
   const hashedPass = await hashPassword(password);
-  console.log(hashedPass)
 
   const newUser = await prisma.user.create({
     data: { username, email, password: hashedPass },

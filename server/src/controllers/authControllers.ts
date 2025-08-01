@@ -13,7 +13,6 @@ export const registerUserController = async (req: Request, res: Response): Promi
   }
 
   try {
-    console.log("registerUserService called controller", { username, email }); 
     const user = await registerUserService(username, email, password);
     res.status(201).json({ message: "Utilisateur enregistré", userId: user.id });
   } catch (err: any) {
