@@ -33,6 +33,8 @@ export const loginUserController = async (req: Request, res: Response): Promise<
     return;
   }
 
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   try {
     const user = await loginUserService(username, password);
     const accessToken = generateAccessToken(user);
