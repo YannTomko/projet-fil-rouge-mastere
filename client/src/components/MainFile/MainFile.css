@@ -31,42 +31,39 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  color: white;
 }
 
 .download-button {
-  background-color: #007bff;
-  color: white;
-}
-
-.download-button:hover {
   background-color: #0056b3;
 }
 
-.delete-button {
-  background-color: #dc3545;
-  color: white;
+.download-button:hover {
+  background-color: #003d80;
 }
 
-.delete-button:hover {
+.delete-button {
   background-color: #b02a37;
 }
 
+.delete-button:hover {
+  background-color: #801f29;
+}
+
 .share-button {
-  background-color: #28a745;
-  color: white;
+  background-color: #1e7e34;
 }
 
 .share-button:hover {
-  background-color: #218838;
+  background-color: #155724;
 }
 
-.statistic-button{
-    background-color: #ff7b14;
-    color: white;
+.statistic-button {
+  background-color: #cc6600;
 }
 
 .statistic-button:hover {
-    background-color: #e65c00;
+  background-color: #994d00;
 }
 
 .error-message {

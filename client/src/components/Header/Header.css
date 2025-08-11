@@ -28,3 +28,13 @@
 .header-button:hover {
   background-color: #d4ac0d;
 }
+
+.header-username {
+  margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .header-username {
+    display: none;
+  }
+}

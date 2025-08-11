@@ -16,10 +16,9 @@
   text-align: left;
 }
 
-
 .file-upload-label {
   display: inline-block;
-  background-color: #007bff;
+  background-color: #0056b3;
   color: white;
   padding: 10px 15px;
   border-radius: 4px;
@@ -28,11 +27,11 @@
 }
 
 .file-upload-label:hover {
-  background-color: #0056b3;
+  background-color: #003d80;
 }
 
 .file-input {
-  display: none; /* Cache l'input pour styliser uniquement le label */
+  display: none;
 }
 
 .upload-button,
@@ -40,7 +39,7 @@
 .upload-another-button {
   margin-right: 10px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #0056b3;
   color: white;
   border: none;
   border-radius: 4px;
@@ -50,15 +49,14 @@
 }
 
 .upload-button:hover,
-.deselect-button:hover,
-.upload-another-button:hover {
-  background-color: #0056b3;
+.deselect-button:hover {
+  background-color: #003d80;
 }
 
 .upload-another-button {
-  background-color: #28a745;
+  background-color: #1e7e34;
 }
 
 .upload-another-button:hover {
-  background-color: #218838;
+  background-color: #155724;
 }

@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
       <h1 className="header-title">AirLocker</h1>
       {user ? (
         <div className="header-user-info">
-          <span style={{marginRight:'10px'}}>Connecté en tant que {user.username}</span>
+          <span className="header-username">Connecté en tant que {user.username}</span>
           <button className="header-button" onClick={onLogout}>Déconnexion</button>
         </div>
       ) : (
