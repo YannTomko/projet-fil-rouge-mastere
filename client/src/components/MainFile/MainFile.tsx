@@ -21,7 +21,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
     const [shareLink, setShareLink] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    // Charger les infos du fichier
     useEffect(() => {
         const fetchFileInfo = async () => {
             try {
@@ -36,7 +35,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         setShareLink(null)
     }, [fileId]);
 
-    // Fonction pour télécharger le fichier
     const handleDownload = async () => {
         try {
             const response = await getFile(fileId);

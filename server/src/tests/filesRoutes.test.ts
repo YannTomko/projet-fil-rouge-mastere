@@ -56,10 +56,8 @@ describe('Files API', () => {
         next();
       });
 
-      // spy sur console.warn
       const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-      // mock fs.unlink pour contrer le nettoyage et provoquer une erreur
       const unlinkMock = jest.spyOn(fs, 'unlink').mockImplementation((path, cb: any) => {
         cb(new Error('permission denied'));
       });

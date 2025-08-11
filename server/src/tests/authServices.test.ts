@@ -1,9 +1,7 @@
-// authServices.test.ts
 import { prisma } from "../prisma";
 import { registerUserService, loginUserService } from "../services/authServices";
 import { hashPassword, verifyPassword } from "../utils/auth";
 
-// mocks pour les services (sont hoistés par Jest)
 jest.mock("../prisma", () => ({
   prisma: {
     user: {
@@ -18,7 +16,6 @@ jest.mock("../utils/auth", () => ({
   verifyPassword: jest.fn(),
 }));
 
-// récupération des mocks typés
 const mockedPrisma = prisma as unknown as {
   user: {
     findUnique: jest.Mock;
@@ -31,10 +28,9 @@ const mockedVerifyPassword = verifyPassword as jest.MockedFunction<typeof verify
 
 describe("utils/auth (implémentation réelle)", () => {
   beforeAll(() => {
-    process.env.BCRYPT_SALT_ROUNDS = "1"; // accélère le hash pour test
+    process.env.BCRYPT_SALT_ROUNDS = "1";
   });
 
-  // on force l’usage de l’implémentation réelle malgré le mock global
   const { hashPassword: realHashPassword, verifyPassword: realVerifyPassword } =
     jest.requireActual("../utils/auth");
 

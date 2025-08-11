@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user, refresh }) => {
         const apply = (e: MediaQueryList | MediaQueryListEvent) => {
             const mobile = 'matches' in e ? e.matches : (e as MediaQueryList).matches;
             setIsMobile(mobile);
-            setIsOpen(!mobile); // fermé par défaut sur mobile
+            setIsOpen(!mobile);
         };
         apply(mm);
         mm.addEventListener('change', apply);
