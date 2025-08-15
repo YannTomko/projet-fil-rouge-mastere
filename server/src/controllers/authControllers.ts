@@ -12,6 +12,11 @@ export const registerUserController = async (req: Request, res: Response): Promi
     return;
   }
 
+  if (typeof password !== "string" || password.length < 8) {
+    res.status(400).json({ error: "Le mot de passe doit contenir au moins 8 caractères" });
+    return;
+  }
+  
   try {
     const user = await registerUserService(username, email, password);
     res.status(201).json({ message: "Utilisateur enregistré", userId: user.id });

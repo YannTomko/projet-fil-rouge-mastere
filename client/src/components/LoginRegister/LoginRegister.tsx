@@ -25,19 +25,24 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
         if (response) {
           onLogin(response);
         } else {
-          setMessage('Nom d\'utilisateur ou mot de passe incorrect');
+          setMessage("Nom d'utilisateur ou mot de passe incorrect");
         }
       }
     } else {
-      if (username && password && password === confirmPassword) {
-        const response = await handleRegister(username, email, password);
-        if (response) {
-          setIsAccountCreated(true);
-        } else {
-          setMessage('Nom d\'utilisateur ou email déjà utilisé');
-        }
-      } else {
+      if (password.length < 8) {
+        setMessage('Le mot de passe doit contenir au moins 8 caractères');
+        return;
+      }
+      if (password !== confirmPassword) {
         setMessage('Les mots de passe ne correspondent pas');
+        return;
+      }
+
+      const response = await handleRegister(username, email, password);
+      if (response) {
+        setIsAccountCreated(true);
+      } else {
+        setMessage("Nom d'utilisateur ou email déjà utilisé");
       }
     }
   };
@@ -63,7 +68,7 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
           <button
             className="form-button"
             onClick={() => {
-              switchMode()
+              switchMode();
               setIsAccountCreated(false);
             }}
           >
@@ -110,6 +115,7 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={isLoginMode ? undefined : 8}
                 />
               </label>
             </div>
