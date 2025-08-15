@@ -115,7 +115,6 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={isLoginMode ? undefined : 8}
                 />
               </label>
             </div>
