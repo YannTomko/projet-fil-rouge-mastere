@@ -30,7 +30,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
       const response = await getFileInfo(fileId);
       if (response) {
         setFileInfo(response.data)
-        console.log("origjhd")
       } else {
         setError('Erreur lors de la récupération des informations du fichier.');
       }
@@ -53,7 +52,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
         window.URL.revokeObjectURL(url);
       }
     } catch (e) {
-      console.error('Erreur lors du téléchargement du fichier', e);
       setError('Erreur lors du téléchargement du fichier.');
     }
   };
@@ -86,7 +84,6 @@ const MainFile: React.FC<MainFileProps> = ({ fileId, refreshSidebar, user }) => 
                   refreshSidebar();
                   navigate('/upload');
                 } catch (e) {
-                  console.error('Erreur lors de la suppression du fichier', e);
                   setError('Erreur lors de la suppression du fichier.');
                 }
               }}

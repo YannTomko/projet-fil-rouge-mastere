@@ -22,10 +22,16 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
     if (isLoginMode) {
       if (username && password) {
         const response = await handleLogin(username, password);
-        if (response) {
+        if (response?.message === "Connexion réussie") {
           onLogin(response);
-        } else {
+        } else if (!response.response) {
+          setMessage("Le serveur est injoignable");
+        } else if (response.response.status >= 500) {
+          setMessage("Erreur serveur");
+        } else if (response.response.status === 400 && response.response.data?.error?.includes("Identifiants invalides")) {
           setMessage("Nom d'utilisateur ou mot de passe incorrect");
+        } else {
+          setMessage(response.response.data?.error || "Erreur inconnue");
         }
       }
     } else {
@@ -39,10 +45,17 @@ const LoginRegister: React.FC<LoginRegisterProps> = ({ onLogin }) => {
       }
 
       const response = await handleRegister(username, email, password);
-      if (response) {
+      
+      if (response?.message === "Utilisateur enregistré") {
         setIsAccountCreated(true);
-      } else {
+      } else if (!response.response) {
+        setMessage("Le serveur est injoignable");
+      } else if (response.response.status >= 500) {
+        setMessage("Erreur serveur");
+      } else if (response.response.status === 400 && response.response.data?.error?.includes("déjà utilisé")) {
         setMessage("Nom d'utilisateur ou email déjà utilisé");
+      } else {
+        setMessage(response.response.data?.error || "Erreur inconnue");
       }
     }
   };

@@ -11,7 +11,7 @@ export const handleRegister = async (username: string, email: string, password: 
         return response.data;
     } catch (error: any) {
         console.error("Erreur lors de l'inscription:", error.response?.data?.error || error.message);
-        return null;
+        return error;
     }
 };
 
@@ -24,7 +24,7 @@ export const handleLogin = async (username: string, password: string) => {
         return response.data;
     } catch (error: any) {
         console.error("Erreur de connexion:", error.response?.data?.error || error.message);
-        return null;
+        return error;
     }
 };
 

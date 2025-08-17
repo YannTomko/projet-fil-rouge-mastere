@@ -52,7 +52,6 @@ const MainUpload: React.FC<MainUploadProps> = ({ user, refreshSidebar }) => {
             setUploaded(true)
             refreshSidebar()
         } catch (error) {
-            console.error('Erreur lors de l\'upload du fichier', error);
             setErrorMessage("Erreur lors de l'upload. Réessayez.");
         }
     };
