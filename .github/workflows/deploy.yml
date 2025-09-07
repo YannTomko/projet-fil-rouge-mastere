@@ -50,7 +50,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no yannt@90.76.255.189 << EOF
+          ssh -o StrictHostKeyChecking=no yannt@176.166.63.120 << EOF
             cd /var/www/projet-fil-rouge-mastere
 
             export JWT_SECRET=$JWT_SECRET
