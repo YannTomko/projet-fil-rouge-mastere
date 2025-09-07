@@ -58,6 +58,21 @@ describe("Auth routes", () => {
       const res = await request(app)
         .post("/api/auth/register")
         .send({ username: "u", email: "e", password: "p" });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBe("Le mot de passe doit contenir au moins 8 caractères");
+    });
+
+    it("should return 500 on unexpected error", async () => {
+      jest.spyOn(authServices, "registerUserService").mockRejectedValue(new Error("DB_ERR"));
+
+      const res = await request(app)
+        .post("/api/auth/register")
+        .send({
+          username: "testuser",
+          email: "test@example.com",
+          password: "validpassword",
+        });
+
       expect(res.status).toBe(500);
       expect(res.body.error).toBe("Erreur serveur lors de l'inscription");
     });
