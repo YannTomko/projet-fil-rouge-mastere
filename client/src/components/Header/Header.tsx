@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
       {user ? (
         <div className="header-user-info">
           <span className="header-username">Connecté en tant que {user.username}</span>
-          <button className="header-button" onClick={onLogout}>Déconnexion</button>
+          <button className="header-button" onClick={() => {onLogout(); navigate('/login');}}>Déconnexion</button>
         </div>
       ) : (
         showLoginButton && (

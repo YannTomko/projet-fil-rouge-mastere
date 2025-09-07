@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Navigate, useParams, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useParams} from 'react-router-dom';
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
 import LoginRegister from './components/LoginRegister/LoginRegister';
@@ -13,8 +13,6 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [refreshSidebar, setRefreshSidebar] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -41,7 +39,6 @@ function App() {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    navigate('/login');
   };
 
   const handleRefreshSidebar = () => {
