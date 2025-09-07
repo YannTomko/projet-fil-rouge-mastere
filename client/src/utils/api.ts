@@ -1,6 +1,8 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
+const navigate = useNavigate()
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -39,7 +41,7 @@ api.interceptors.response.use(
                 localStorage.removeItem("user");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
-                window.location.href = "/";
+                window.location.href = "/airlocker/login";
                 return Promise.reject(error);
             }
             try {
@@ -52,7 +54,7 @@ api.interceptors.response.use(
                 localStorage.removeItem("user");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
-                window.location.href = "/";
+                window.location.href = "/airlocker/login";
                 return Promise.reject(refreshError);
             }
         }
