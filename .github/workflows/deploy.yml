@@ -62,6 +62,7 @@ jobs:
             npm install
             npm run lint
             npx prisma migrate deploy
+            npx prisma generate
             npx tsc
             pm2 restart airlocker-api --update-env \
               || pm2 start dist/server.js --name airlocker-api --env production
